@@ -1,0 +1,23 @@
+/* Resetting body margin and padding */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Footer Styling */
+  footer {
+    margin-top: 0; /* Removes top margin */
+    padding-top: 0; /* Removes any padding at the top */
+    padding-bottom: 1rem; /* Adjust this padding as needed */
+    background-color: #0b0c0e;
+    color: white;
+    text-align: center;
+  }
+  
+  /* Optional: For container holding footer */
+  footer .container {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  

@@ -1,0 +1,71 @@
+:root {
+  --header-height: 80px;
+}
+
+/* Ensure body accounts for fixed header */
+body {
+  padding-top: var(--header-height);
+}
+
+/* Fixed header styling */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: white;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Banner container */
+.banner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  position: relative;
+}
+
+/* Rest of your existing Swiper styles */
+.mySwiper {
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.swiper-slide {
+  width: 280px;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.4s ease;
+  background: white;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.swiper-slide-active {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 768px) {
+  .swiper-slide {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .swiper-slide {
+    width: 200px;
+    height: 200px;
+  }
+}
