@@ -9,7 +9,7 @@ const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // Clear any previous errors
 
     if (!email || !password) {
       setError("All fields are required.");
@@ -17,7 +17,7 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/login", {  // Ensure this matches your backend route
+      const response = await fetch("http://localhost:5000/api/login", { // Ensure this matches your backend route
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -31,7 +31,8 @@ const LoginForm = () => {
         // Redirect to MyBookings page with the email in the URL query
         navigate(`/mybookings?email=${encodeURIComponent(email)}`);
       } else {
-        setError(data.message || "Invalid credentials");
+        // Handle login failure (incorrect credentials or other issues)
+        setError(data.message || "Login failed. Please check your credentials.");
       }
     } catch (error) {
       setError("Login failed. Please try again.");
