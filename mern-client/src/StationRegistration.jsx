@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const StationRegistration = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,6 @@ const StationRegistration = () => {
     services: [],
     openingHours: '',
     closingHours: '',
-    images: null,
     password: '',
     confirmPassword: ''
   });
@@ -24,7 +24,7 @@ const StationRegistration = () => {
   ];
 
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
       setFormData(prev => ({
         ...prev,
@@ -32,20 +32,39 @@ const StationRegistration = () => {
           ? [...prev.services, value] 
           : prev.services.filter(service => service !== value)
       }));
-    } else if (type === "file") {
-      setFormData(prev => ({ ...prev, images: files[0] }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    console.log("Form Submitted", formData);
+
+    // Convert services array to a comma-separated string
+    const servicesString = formData.services.join(',');
+
+    const newStation = {
+      ...formData,
+      services: servicesString // Sending services as a string
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/stations', newStation, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      alert(response.data.message);
+    } catch (error) {
+      console.error(error);
+      alert(`Error submitting form: ${error.response?.data.message || error.message}`);
+    }
   };
 
   return (
@@ -71,8 +90,6 @@ const StationRegistration = () => {
           <input type="time" name="openingHours" placeholder="Opening Hours" onChange={handleChange} required className="w-full p-2 border rounded" />
           <input type="time" name="closingHours" placeholder="Closing Hours" onChange={handleChange} required className="w-full p-2 border rounded" />
         </div>
-        
-        <input type="file" name="images" accept="image/*" onChange={handleChange} className="w-full p-2 border rounded" />
         
         <input type="password" name="password" placeholder="Password" onChange={handleChange} required className="w-full p-2 border rounded" />
         <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange} required className="w-full p-2 border rounded" />

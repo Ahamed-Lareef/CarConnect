@@ -24,7 +24,7 @@ const Navbar = () => {
     { link: "About", path: "/about" },  // ✅ About page added
     { link: "Book a Wash", path: "/booking" },
     { link: "Subscription", path: "/subscription" },
-    { link: "My Bookings", path: "/myBookings" },
+    { link: "My Bookings", path: "/loginForm" },
     { link: "Contact", path: "/contact" },
   ];
 

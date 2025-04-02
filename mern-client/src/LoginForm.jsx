@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -10,49 +10,26 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-  
+
     if (!email || !password) {
       setError("All fields are required.");
       return;
     }
-  
+
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch("http://localhost:5000/api/login", {  // Ensure this matches your backend route
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
-        if (data.role === "customer") {
-          const confirmChange = window.confirm(
-            "Would you like to become a Service Provider?"
-          );
-  
-          if (confirmChange) {
-            // Call the backend to update the role in the database
-            const updateResponse = await fetch(
-              `http://localhost:5000/api/users/${data._id}/updateRole`,
-              {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ role: "service_provider" }),
-              }
-            );
-  
-            if (updateResponse.ok) {
-              data.role = "service_provider"; // Update frontend role
-              alert("You are now a Service Provider!");
-            } else {
-              alert("Failed to update role. Please try again.");
-            }
-          }
-        }
-  
-        localStorage.setItem("user", JSON.stringify(data)); // Store updated user info
-        navigate("/serviceProviderDashboard");
+        localStorage.setItem("user", JSON.stringify(data)); // Store user info
+
+        // Redirect to MyBookings page with the email in the URL query
+        navigate(`/mybookings?email=${encodeURIComponent(email)}`);
       } else {
         setError(data.message || "Invalid credentials");
       }
@@ -60,7 +37,6 @@ const Login = () => {
       setError("Login failed. Please try again.");
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -107,4 +83,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginForm;
