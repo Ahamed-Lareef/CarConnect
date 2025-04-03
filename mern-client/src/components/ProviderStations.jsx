@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const CitySearch = () => {
-  const [city, setCity] = useState("");
+const ProviderStations = () => {
+  const [email, setEmail] = useState("");
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
-  // Handle city input change
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
+  // Handle email input change
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
   // Format time to a more readable format
@@ -20,29 +18,22 @@ const CitySearch = () => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Fetch stations based on the city entered
-  const fetchStations = async () => {
-    if (!city.trim()) {
-      setError("Please enter a city.");
+  // Fetch stations based on provider's email
+  const fetchStationsByEmail = async () => {
+    if (!email.trim()) {
+      setError("Please enter an email.");
       return;
     }
     setLoading(true);
     setError("");
 
     try {
-      const response = await axios.get("http://localhost:5000/api/stations", {
-        params: { location: city },
+      const response = await axios.get("http://localhost:5000/api/stationsByEmail", {
+        params: { email },
       });
 
       if (Array.isArray(response.data)) {
-        // If services are in string format, split them into an array
-        const updatedStations = response.data.map((station) => {
-          if (typeof station.services === "string") {
-            station.services = station.services.split(",").map(service => service.trim()); // Trim spaces
-          }
-          return station;
-        });
-        setStations(updatedStations);
+        setStations(response.data);
       } else {
         setError("Unexpected response format.");
       }
@@ -53,21 +44,31 @@ const CitySearch = () => {
     }
   };
 
+  // Delete station
+  const deleteStation = async (stationId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/stations/${stationId}`);
+      setStations(stations.filter(station => station._id !== stationId));
+    } catch (err) {
+      setError("Failed to delete station.");
+    }
+  };
+
   return (
     <div className="container">
       <div className="flex flex-col items-center py-8">
         <input
-          type="text"
-          placeholder="Enter your city..."
+          type="email"
+          placeholder="Enter your email..."
           className="p-3 rounded border border-[#636363] focus:outline-none mb-4"
-          value={city}
-          onChange={handleCityChange}
+          value={email}
+          onChange={handleEmailChange}
         />
         <button
-          onClick={fetchStations}
+          onClick={fetchStationsByEmail}
           className="bg-[#dc323f] hover:bg-[#c02a36] text-[#f8f8f6] px-6 py-3 rounded transition-colors"
         >
-          Find Services
+          View My Stations
         </button>
 
         {loading && <p className="text-[#636363]">Loading...</p>}
@@ -94,17 +95,25 @@ const CitySearch = () => {
                     <strong>Closing Hours: </strong>
                     <span>{formatTime(station.closingHours)}</span>
                   </div>
-                  <button
-                    onClick={() => navigate("/loginForm")}
-                    className="mt-4 bg-gray-800 hover:bg-[#c02a36] text-white px-4 py-2 rounded transition"
-                  >
-                    Book a Wash
-                  </button>
+                  <div className="mt-4">
+                    <button
+                      onClick={() => deleteStation(station._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => alert('Update functionality to be implemented')}
+                      className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
           ) : (
-            !loading && <p>No stations found for this location.</p>
+            !loading && <p>No stations found for this email.</p>
           )}
         </div>
       </div>
@@ -112,4 +121,4 @@ const CitySearch = () => {
   );
 };
 
-export default CitySearch;
+export default ProviderStations;

@@ -1,48 +1,51 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
-const AdminLogin = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+const AdminLogin = ({ onLogin }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/login", {
+        email,
+        password,
+      });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Admin Login Data:", formData);
+      if (response.data.user.role === "admin") {
+        onLogin(response.data.user);
+      } else {
+        setError("Only admins can log in.");
+      }
+    } catch (err) {
+      setError("Invalid credentials.");
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center mb-6">Admin Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            name="email"
-            placeholder="Admin Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <button type="submit" className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-800">
-            Login
-          </button>
-        </form>
-      </div>
+    <div className="flex flex-col items-center p-6">
+      <input
+        type="email"
+        placeholder="Admin Email"
+        className="p-3 border rounded mb-2"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        className="p-3 border rounded mb-2"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button
+        onClick={handleLogin}
+        className="bg-black text-white px-6 py-2 rounded"
+      >
+        Login
+      </button>
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 };

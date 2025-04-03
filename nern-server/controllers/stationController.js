@@ -65,4 +65,26 @@ async function getStations(req, res) {
   }
 }
 
-module.exports = { addStation, getStations };
+// New function to get stations by provider email
+async function getStationsByEmail(req, res) {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const stations = await stationModel.getStationsByEmail(email);
+
+    if (stations.length === 0) {
+      return res.status(404).json({ message: "No stations found for this email" });
+    }
+
+    res.status(200).json(stations);
+  } catch (error) {
+    console.error("Error fetching stations by email", error);
+    res.status(500).json({ message: "Error fetching stations by email", error: error.message });
+  }
+}
+
+module.exports = { addStation, getStations, getStationsByEmail };

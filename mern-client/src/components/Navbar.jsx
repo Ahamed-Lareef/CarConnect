@@ -53,6 +53,14 @@ const Navbar = () => {
             ))}
           </ul>
 
+          {/* Admin Login Button */}
+          <Link 
+            to="/loginForm"
+            className="hidden md:block bg-[#dc323f] text-white px-4 py-2 rounded-md hover:bg-[#b71c2c] transition duration-300"
+          >
+            Admin
+          </Link>
+
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button onClick={toggleMenu} className="text-white focus:outline-none">

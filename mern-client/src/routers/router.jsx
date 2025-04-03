@@ -21,6 +21,8 @@ import PaymentSuccess from "../booking/PaymentSuccess";
 import LoginForm from "../LoginForm";
 import ProtectedPage from "../ProtectedPage";
 import SignUp from "../SignUp";
+import ProviderStations from "../components/ProviderStations";
+import AdminDashboard from "../dashboard/adminDashboard";
 
 const router = createBrowserRouter([
   
@@ -48,6 +50,9 @@ const router = createBrowserRouter([
       { path: "/customerDashboard", element: <CustomerDashboard /> },
       { path: "/loginForm", element: <LoginForm /> },
       {path: "/stations", element: <StationRegistration /> },
+      {path: "/providerStations", element: <ProviderStations /> },
+      {path: "/adminLogin", element: <AdminLogin /> },
+      {path: "/adminDashboard", element: <AdminDashboard /> },
       
     ]
   }

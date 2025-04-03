@@ -25,7 +25,7 @@ const ServiceProviderDashboard = () => {
             <h2 className="text-xl font-semibold">View Your Stations</h2>
             <p className="mt-2">Manage and view your registered stations.</p>
             <Link
-              to="/viewStations"
+              to="/providerStations"
               className="mt-4 inline-block bg-[#dc323f] text-white px-6 py-3 rounded-full hover:bg-red-600 transition-all"
             >
               View Stations

@@ -11,4 +11,9 @@ async function getStations(query = {}) {
   return await stationsCollection.find(query).toArray();
 }
 
-module.exports = { addStation, getStations };
+// New function to get stations by provider email
+async function getStationsByEmail(email) {
+  return await stationsCollection.find({ email }).toArray();
+}
+
+module.exports = { addStation, getStations, getStationsByEmail };

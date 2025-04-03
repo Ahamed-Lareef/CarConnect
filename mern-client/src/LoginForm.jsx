@@ -28,10 +28,14 @@ const LoginForm = () => {
       if (response.ok) {
         localStorage.setItem("user", JSON.stringify(data)); // Store user info
 
-        // Redirect to MyBookings page with the email in the URL query
-        navigate(`/mybookings?email=${encodeURIComponent(email)}`);
+        // ✅ Redirect admin to admin dashboard
+        if (data.user.role === "admin") {
+          navigate("/adminDashboard"); 
+        } else {
+          // Redirect to MyBookings page with the email in the URL query
+          navigate(`/mybookings?email=${encodeURIComponent(email)}`);
+        }
       } else {
-        // Handle login failure (incorrect credentials or other issues)
         setError(data.message || "Login failed. Please check your credentials.");
       }
     } catch (error) {
@@ -77,7 +81,7 @@ const LoginForm = () => {
         </form>
 
         <p className="text-center text-gray-600 mt-4">
-          Don't have an account? <a href="/register" className="text-blue-500">Register</a>
+          Don't have an account? <a href="/signup" className="text-blue-500">Register</a>
         </p>
       </div>
     </div>
